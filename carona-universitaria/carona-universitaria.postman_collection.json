@@ -1,0 +1,377 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Carona Universitária — API Mock",
+    "description": "Collection completa da API REST mock do sistema de caronas universitárias.\n\nBase URL: http://localhost:3001/api\n\nFluxo sugerido:\n1. Auth > Login (salva o token automaticamente)\n2. Explore os demais endpoints\n\nUsuários de teste (senha: senha123):\n- ana.santos@universidade.edu.br\n- carlos.lima@universidade.edu.br\n- beatriz.oliveira@universidade.edu.br\n- rafael.mendes@universidade.edu.br\n- juliana.costa@universidade.edu.br",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Endpoints de autenticação: registro, login e dados do usuário logado.",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Novo Usuário\",\n  \"email\": \"novo.usuario@universidade.edu.br\",\n  \"phone\": \"(11) 91234-5678\",\n  \"password\": \"senha123\"\n}"
+            },
+            "description": "Cria um novo usuário. Retorna token JWT e dados do usuário."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "  console.log('Token salvo:', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.santos@universidade.edu.br\",\n  \"password\": \"senha123\"\n}"
+            },
+            "description": "Autentica usuário. Salva o token automaticamente na variável {{token}}."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "  console.log('Token salvo:', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] },
+            "description": "Retorna dados do usuário autenticado. Requer token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "CRUD de usuários.",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/users", "host": ["{{baseUrl}}"], "path": ["users"] },
+            "description": "Lista todos os usuários (sem senhas)."
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/users/1", "host": ["{{baseUrl}}"], "path": ["users", "1"] },
+            "description": "Busca usuário pelo ID."
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/users/1", "host": ["{{baseUrl}}"], "path": ["users", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ana Paula Santos Atualizada\",\n  \"phone\": \"(11) 99999-0000\"\n}"
+            },
+            "description": "Atualiza nome e telefone do usuário. Requer token do próprio usuário."
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/users/1", "host": ["{{baseUrl}}"], "path": ["users", "1"] },
+            "description": "Remove usuário. Requer token do próprio usuário."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicles",
+      "description": "CRUD de veículos.",
+      "item": [
+        {
+          "name": "Get All Vehicles",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/vehicles", "host": ["{{baseUrl}}"], "path": ["vehicles"] },
+            "description": "Lista todos os veículos cadastrados."
+          }
+        },
+        {
+          "name": "Get My Vehicles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/vehicles/my", "host": ["{{baseUrl}}"], "path": ["vehicles", "my"] },
+            "description": "Lista veículos do usuário autenticado. Requer token."
+          }
+        },
+        {
+          "name": "Get Vehicle by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/vehicles/1", "host": ["{{baseUrl}}"], "path": ["vehicles", "1"] },
+            "description": "Busca veículo pelo ID."
+          }
+        },
+        {
+          "name": "Create Vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/vehicles", "host": ["{{baseUrl}}"], "path": ["vehicles"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plate\": \"XYZ-9876\",\n  \"model\": \"Renault Kwid\",\n  \"color\": \"Laranja\",\n  \"seats\": 4\n}"
+            },
+            "description": "Cadastra novo veículo para o usuário autenticado. Requer token."
+          }
+        },
+        {
+          "name": "Update Vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/vehicles/1", "host": ["{{baseUrl}}"], "path": ["vehicles", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"Dourado\",\n  \"seats\": 4\n}"
+            },
+            "description": "Atualiza dados do veículo. Requer token do dono."
+          }
+        },
+        {
+          "name": "Delete Vehicle",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/vehicles/1", "host": ["{{baseUrl}}"], "path": ["vehicles", "1"] },
+            "description": "Remove veículo. Requer token do dono."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rides",
+      "description": "CRUD de caronas. Suporte a filtros por origem, destino e data.",
+      "item": [
+        {
+          "name": "Get All Rides",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/rides",
+              "host": ["{{baseUrl}}"],
+              "path": ["rides"]
+            },
+            "description": "Lista todas as caronas ativas com vagas disponíveis."
+          }
+        },
+        {
+          "name": "Get Rides — with Filters",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/rides?origin=Jardins&destination=USP&date=2026-03-15",
+              "host": ["{{baseUrl}}"],
+              "path": ["rides"],
+              "query": [
+                { "key": "origin", "value": "Jardins" },
+                { "key": "destination", "value": "USP" },
+                { "key": "date", "value": "2026-03-15" }
+              ]
+            },
+            "description": "Busca caronas com filtros opcionais: origin, destination, date (YYYY-MM-DD)."
+          }
+        },
+        {
+          "name": "Get Ride by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/rides/1", "host": ["{{baseUrl}}"], "path": ["rides", "1"] },
+            "description": "Retorna detalhes de uma carona com lista de passageiros."
+          }
+        },
+        {
+          "name": "Get My Rides as Driver",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/rides/my/driver", "host": ["{{baseUrl}}"], "path": ["rides", "my", "driver"] },
+            "description": "Lista caronas em que o usuário é motorista. Requer token."
+          }
+        },
+        {
+          "name": "Get My Rides as Passenger",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/rides/my/passenger", "host": ["{{baseUrl}}"], "path": ["rides", "my", "passenger"] },
+            "description": "Lista caronas em que o usuário é passageiro. Requer token."
+          }
+        },
+        {
+          "name": "Create Ride",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/rides", "host": ["{{baseUrl}}"], "path": ["rides"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\": 1,\n  \"origin\": \"Bairro Jardins, São Paulo\",\n  \"destination\": \"Universidade USP — Campus Butantã\",\n  \"departureTime\": \"2026-04-10T07:30:00.000Z\",\n  \"price\": 9.00,\n  \"availableSeats\": 3,\n  \"notes\": \"Passo na Consolação se precisar\"\n}"
+            },
+            "description": "Cria nova oferta de carona. Requer token do motorista."
+          }
+        },
+        {
+          "name": "Update Ride",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/rides/4", "host": ["{{baseUrl}}"], "path": ["rides", "4"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 9.50,\n  \"notes\": \"Atualizado — saída pontual\"\n}"
+            },
+            "description": "Atualiza dados de uma carona. Requer token do motorista dono."
+          }
+        },
+        {
+          "name": "Cancel Ride (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/rides/4", "host": ["{{baseUrl}}"], "path": ["rides", "4"] },
+            "description": "Cancela uma carona (status → cancelled). Requer token do motorista."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "description": "CRUD de reservas de vagas em caronas.",
+      "item": [
+        {
+          "name": "Get All Reservations",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/reservations", "host": ["{{baseUrl}}"], "path": ["reservations"] },
+            "description": "Lista todas as reservas com dados enriquecidos."
+          }
+        },
+        {
+          "name": "Get Reservation by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/reservations/1", "host": ["{{baseUrl}}"], "path": ["reservations", "1"] },
+            "description": "Busca reserva pelo ID."
+          }
+        },
+        {
+          "name": "Create Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/reservations", "host": ["{{baseUrl}}"], "path": ["reservations"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rideId\": 2\n}"
+            },
+            "description": "Reserva uma vaga em uma carona. Requer token do passageiro."
+          }
+        },
+        {
+          "name": "Update Reservation Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/reservations/3", "host": ["{{baseUrl}}"], "path": ["reservations", "3"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"cancelled\"\n}"
+            },
+            "description": "Atualiza status da reserva (confirmed/cancelled). Requer token do passageiro."
+          }
+        },
+        {
+          "name": "Delete Reservation",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/reservations/3", "host": ["{{baseUrl}}"], "path": ["reservations", "3"] },
+            "description": "Remove reserva e devolve a vaga na carona. Requer token do passageiro."
+          }
+        }
+      ]
+    }
+  ]
+}
