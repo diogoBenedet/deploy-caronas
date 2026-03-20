@@ -1,7 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const db = require('./database/db');
+const { sequelize } = require('./models');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,7 +27,9 @@ app.get('*', (req, res) => {
 });
 
 async function start() {
-  await db.init();
+  await sequelize.authenticate();
+  await sequelize.sync();
+  console.log('Conectado ao MySQL com sucesso.');
 
   const server = app.listen(PORT, () => {
     console.log(`\n🚗 Carona Universitária rodando em http://localhost:${PORT}\n`);

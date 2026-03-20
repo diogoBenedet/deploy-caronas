@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const db = require('../database/db');
+const { User } = require('../models');
 const { authMiddleware } = require('../middleware/auth');
 
 const router = express.Router();
@@ -30,29 +30,45 @@ const upload = multer({
 });
 
 // Atualizar perfil
-router.put('/profile', authMiddleware, (req, res) => {
-  const { name, phone } = req.body;
-  if (!name || !phone) {
-    return res.status(400).json({ error: 'Nome e telefone são obrigatórios' });
+router.put('/profile', authMiddleware, async (req, res) => {
+  try {
+    const { name, phone } = req.body;
+    if (!name || !phone)
+      return res.status(400).json({ error: 'Nome e telefone são obrigatórios' });
+
+    await User.update({ name, phone }, { where: { id: req.userId } });
+    const user = await User.findByPk(req.userId, {
+      attributes: ['id', 'name', 'email', 'phone', 'profile_photo'],
+    });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  db.prepare('UPDATE users SET name = ?, phone = ? WHERE id = ?').run(name, phone, req.userId);
-  const user = db.prepare('SELECT id, name, email, phone, profile_photo FROM users WHERE id = ?').get(req.userId);
-  res.json(user);
 });
 
 // Upload de foto
-router.post('/photo', authMiddleware, upload.single('photo'), (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo enviado' });
-  const photoUrl = `/uploads/${req.file.filename}`;
-  db.prepare('UPDATE users SET profile_photo = ? WHERE id = ?').run(photoUrl, req.userId);
-  res.json({ profile_photo: photoUrl });
+router.post('/photo', authMiddleware, upload.single('photo'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo enviado' });
+    const photoUrl = `/uploads/${req.file.filename}`;
+    await User.update({ profile_photo: photoUrl }, { where: { id: req.userId } });
+    res.json({ profile_photo: photoUrl });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Perfil público de um usuário (para passageiros verem o motorista)
-router.get('/:id', (req, res) => {
-  const user = db.prepare('SELECT id, name, phone, profile_photo FROM users WHERE id = ?').get(req.params.id);
-  if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
-  res.json(user);
+router.get('/:id', async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id, {
+      attributes: ['id', 'name', 'phone', 'profile_photo'],
+    });
+    if (!user) return res.status(404).json({ error: 'Usuário não encontrado' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;
