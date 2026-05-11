@@ -3,15 +3,19 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const { authMiddleware, JWT_SECRET } = require('../middleware/auth');
+const { sanitizeBody, validateRegisterBody } = require('../middleware/validate');
 
 const router = express.Router();
+
+router.use(sanitizeBody);
 
 // Registro
 router.post('/register', async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
-    if (!name || !email || !phone || !password)
-      return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+
+    const validationError = validateRegisterBody(req.body);
+    if (validationError) return res.status(400).json({ error: validationError });
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email))

@@ -2,8 +2,11 @@ const express = require('express');
 const { Op } = require('sequelize');
 const { sequelize, Ride, User, Vehicle, Reservation } = require('../models');
 const { authMiddleware } = require('../middleware/auth');
+const { sanitizeBody, sanitizeStr, validateRideBody, validatePositiveFloat, validatePositiveInt } = require('../middleware/validate');
 
 const router = express.Router();
+
+router.use(sanitizeBody);
 
 // Listar caronas (com filtros)
 router.get('/', async (req, res) => {
@@ -165,9 +168,10 @@ router.get('/:id', async (req, res) => {
 // Criar carona
 router.post('/', authMiddleware, async (req, res) => {
   try {
+    const validationError = validateRideBody(req.body);
+    if (validationError) return res.status(400).json({ error: validationError });
+
     const { vehicle_id, origin, destination, departure_time, price, available_seats, notes } = req.body;
-    if (!vehicle_id || !origin || !destination || !departure_time || price == null || !available_seats)
-      return res.status(400).json({ error: 'Campos obrigatórios faltando' });
 
     const vehicle = await Vehicle.findOne({ where: { id: vehicle_id, user_id: req.userId } });
     if (!vehicle) return res.status(404).json({ error: 'Veículo não encontrado' });
@@ -175,20 +179,22 @@ router.post('/', authMiddleware, async (req, res) => {
     if (new Date(departure_time) <= new Date())
       return res.status(400).json({ error: 'Horário de saída deve ser no futuro' });
 
-    const seats = parseInt(available_seats);
+    const seats = parseInt(available_seats, 10);
     if (seats < 1 || seats > vehicle.seats)
       return res.status(400).json({ error: `Vagas disponíveis deve ser entre 1 e ${vehicle.seats}` });
 
+    const safeNotes = notes ? sanitizeStr(notes, 500) : '';
+
     const ride = await Ride.create({
       driver_id: req.userId,
-      vehicle_id,
-      origin,
-      destination,
+      vehicle_id: parseInt(vehicle_id, 10),
+      origin: sanitizeStr(origin),
+      destination: sanitizeStr(destination),
       departure_time,
       price: parseFloat(price),
       available_seats: seats,
       total_seats: seats,
-      notes: notes || '',
+      notes: safeNotes,
     });
 
     res.status(201).json(ride);

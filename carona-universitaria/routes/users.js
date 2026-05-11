@@ -4,8 +4,11 @@ const path = require('path');
 const fs = require('fs');
 const { User } = require('../models');
 const { authMiddleware } = require('../middleware/auth');
+const { sanitizeBody, sanitizeStr } = require('../middleware/validate');
 
 const router = express.Router();
+
+router.use(sanitizeBody);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -32,9 +35,12 @@ const upload = multer({
 // Atualizar perfil
 router.put('/profile', authMiddleware, async (req, res) => {
   try {
-    const { name, phone } = req.body;
+    const name = sanitizeStr(req.body.name, 100);
+    const phone = sanitizeStr(req.body.phone, 20);
     if (!name || !phone)
       return res.status(400).json({ error: 'Nome e telefone são obrigatórios' });
+    if (name.length < 2)
+      return res.status(400).json({ error: 'Nome deve ter pelo menos 2 caracteres' });
 
     await User.update({ name, phone }, { where: { id: req.userId } });
     const user = await User.findByPk(req.userId, {
