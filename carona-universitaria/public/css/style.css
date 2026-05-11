@@ -1034,6 +1034,26 @@ textarea { resize: vertical; min-height: 90px; }
 
 .filter-bar .form-group { margin: 0; flex: 1; min-width: 150px; }
 
+.filter-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-end; }
+
+.filter-advanced {
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+}
+.filter-advanced summary {
+  font-size: 0.85rem;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+  user-select: none;
+  margin-bottom: 0.5rem;
+}
+.filter-advanced summary::before { content: '▸ '; }
+.filter-advanced[open] summary::before { content: '▾ '; }
+.filter-advanced-row { margin-top: 0.5rem; }
+
 /* ===== VEHICLE CARD ===== */
 .vehicle-card {
   background: var(--bg-card);

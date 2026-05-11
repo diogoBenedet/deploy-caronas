@@ -11,7 +11,7 @@ router.use(sanitizeBody);
 // Listar caronas (com filtros)
 router.get('/', async (req, res) => {
   try {
-    const { origin, destination, date } = req.query;
+    const { origin, destination, date, time_from, time_to, max_price, min_seats } = req.query;
 
     const where = {
       status: 'active',
@@ -19,13 +19,36 @@ router.get('/', async (req, res) => {
       departure_time: { [Op.gt]: new Date() },
     };
 
-    if (origin) where.origin = { [Op.like]: `%${origin}%` };
-    if (destination) where.destination = { [Op.like]: `%${destination}%` };
+    if (origin) where.origin = { [Op.like]: `%${sanitizeStr(origin)}%` };
+    if (destination) where.destination = { [Op.like]: `%${sanitizeStr(destination)}%` };
+
     if (date) {
-      where[Op.and] = sequelize.where(
-        sequelize.fn('DATE', sequelize.col('departure_time')),
-        date
-      );
+      const andClauses = [
+        sequelize.where(sequelize.fn('DATE', sequelize.col('departure_time')), date),
+      ];
+
+      if (time_from) {
+        andClauses.push(
+          sequelize.where(sequelize.fn('TIME', sequelize.col('departure_time')), { [Op.gte]: time_from })
+        );
+      }
+      if (time_to) {
+        andClauses.push(
+          sequelize.where(sequelize.fn('TIME', sequelize.col('departure_time')), { [Op.lte]: time_to })
+        );
+      }
+
+      where[Op.and] = andClauses;
+    }
+
+    if (max_price != null && max_price !== '') {
+      const maxP = parseFloat(max_price);
+      if (!isNaN(maxP)) where.price = { [Op.lte]: maxP };
+    }
+
+    if (min_seats != null && min_seats !== '') {
+      const minS = parseInt(min_seats, 10);
+      if (!isNaN(minS) && minS > 0) where.available_seats = { [Op.gte]: minS };
     }
 
     const rides = await Ride.findAll({

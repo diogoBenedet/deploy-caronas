@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (params.get('origin')) document.getElementById('filterOrigin').value = params.get('origin');
   if (params.get('destination')) document.getElementById('filterDest').value = params.get('destination');
   if (params.get('date')) document.getElementById('filterDate').value = params.get('date');
+  if (params.get('max_price')) document.getElementById('filterMaxPrice').value = params.get('max_price');
+  if (params.get('min_seats')) document.getElementById('filterMinSeats').value = params.get('min_seats');
 
   document.getElementById('filterDate').min = new Date().toISOString().split('T')[0];
 
@@ -28,16 +30,24 @@ async function loadRides() {
   const origin = document.getElementById('filterOrigin').value.trim();
   const dest = document.getElementById('filterDest').value.trim();
   const date = document.getElementById('filterDate').value;
+  const timeFrom = document.getElementById('filterTimeFrom').value;
+  const timeTo = document.getElementById('filterTimeTo').value;
+  const maxPrice = document.getElementById('filterMaxPrice').value;
+  const minSeats = document.getElementById('filterMinSeats').value;
 
   const params = new URLSearchParams();
   if (origin) params.set('origin', origin);
   if (dest) params.set('destination', dest);
   if (date) params.set('date', date);
+  if (timeFrom) params.set('time_from', timeFrom);
+  if (timeTo) params.set('time_to', timeTo);
+  if (maxPrice) params.set('max_price', maxPrice);
+  if (minSeats) params.set('min_seats', minSeats);
 
   try {
     const rides = await api('/rides?' + params.toString());
     if (countEl) {
-      const hasFilter = origin || dest || date;
+      const hasFilter = origin || dest || date || timeFrom || timeTo || maxPrice || minSeats;
       countEl.textContent = `${rides.length} carona${rides.length !== 1 ? 's' : ''} encontrada${rides.length !== 1 ? 's' : ''}${hasFilter ? ' com os filtros aplicados' : ''}`;
     }
     if (rides.length === 0) {

@@ -60,19 +60,42 @@
     <!-- FILTROS -->
     <div class="filter-bar">
       <form id="filterForm">
-        <div class="form-group">
-          <label>Origem</label>
-          <input type="text" id="filterOrigin" placeholder="De onde?" />
+        <div class="filter-row">
+          <div class="form-group">
+            <label>Origem</label>
+            <input type="text" id="filterOrigin" placeholder="De onde?" />
+          </div>
+          <div class="form-group">
+            <label>Destino</label>
+            <input type="text" id="filterDest" placeholder="Para onde?" />
+          </div>
+          <div class="form-group">
+            <label>Data</label>
+            <input type="date" id="filterDate" />
+          </div>
         </div>
-        <div class="form-group">
-          <label>Destino</label>
-          <input type="text" id="filterDest" placeholder="Para onde?" />
-        </div>
-        <div class="form-group">
-          <label>Data</label>
-          <input type="date" id="filterDate" />
-        </div>
-        <div style="display:flex;gap:0.5rem;align-items:flex-end;">
+        <details class="filter-advanced">
+          <summary>Filtros avançados</summary>
+          <div class="filter-row filter-advanced-row">
+            <div class="form-group">
+              <label>Horário a partir de</label>
+              <input type="time" id="filterTimeFrom" />
+            </div>
+            <div class="form-group">
+              <label>Horário até</label>
+              <input type="time" id="filterTimeTo" />
+            </div>
+            <div class="form-group">
+              <label>Preço máximo (R$)</label>
+              <input type="number" id="filterMaxPrice" placeholder="Ex: 15" min="0" step="0.50" />
+            </div>
+            <div class="form-group">
+              <label>Vagas mínimas</label>
+              <input type="number" id="filterMinSeats" placeholder="Ex: 2" min="1" max="8" />
+            </div>
+          </div>
+        </details>
+        <div style="display:flex;gap:0.5rem;align-items:flex-end;flex-wrap:wrap;">
           <button type="submit" class="btn btn-primary">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             Filtrar
