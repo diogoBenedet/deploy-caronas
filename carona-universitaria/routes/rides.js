@@ -1,6 +1,6 @@
 const express = require('express');
 const { Op } = require('sequelize');
-const { sequelize, Ride, User, Vehicle, Reservation } = require('../models');
+const { sequelize, Ride, User, Vehicle, Reservation, Notification } = require('../models');
 const { authMiddleware } = require('../middleware/auth');
 const { sanitizeBody, sanitizeStr, validateRideBody, validatePositiveFloat, validatePositiveInt } = require('../middleware/validate');
 
@@ -210,6 +210,19 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     if (!ride) return res.status(404).json({ error: 'Carona não encontrada' });
 
     await ride.update({ status: 'cancelled' });
+
+    // Notifica todos os passageiros confirmados
+    const reservations = await Reservation.findAll({ where: { ride_id: ride.id, status: 'confirmed' } });
+    await Promise.all(reservations.map(r =>
+      Notification.create({
+        user_id: r.passenger_id,
+        type: 'ride_cancelled',
+        title: 'Carona cancelada',
+        message: `A carona de ${ride.origin} para ${ride.destination} foi cancelada pelo motorista.`,
+        ride_id: ride.id,
+      })
+    ));
+
     res.json({ message: 'Carona cancelada' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -230,6 +243,17 @@ router.post('/:id/reserve', authMiddleware, async (req, res) => {
 
     await Reservation.create({ ride_id: req.params.id, passenger_id: req.userId });
     await ride.decrement('available_seats');
+
+    // Notifica o motorista
+    const passenger = await User.findByPk(req.userId, { attributes: ['name'] });
+    await Notification.create({
+      user_id: ride.driver_id,
+      type: 'reservation_confirmed',
+      title: 'Nova reserva!',
+      message: `${passenger.name} reservou uma vaga na sua carona de ${ride.origin} para ${ride.destination}.`,
+      ride_id: ride.id,
+    });
+
     res.status(201).json({ message: 'Vaga reservada com sucesso!' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -244,8 +268,22 @@ router.delete('/:id/reserve', authMiddleware, async (req, res) => {
     });
     if (!reservation) return res.status(404).json({ error: 'Reserva não encontrada' });
 
+    const ride = await Ride.findByPk(req.params.id);
     await reservation.destroy();
     await Ride.increment('available_seats', { where: { id: req.params.id } });
+
+    // Notifica o motorista
+    if (ride) {
+      const passenger = await User.findByPk(req.userId, { attributes: ['name'] });
+      await Notification.create({
+        user_id: ride.driver_id,
+        type: 'reservation_cancelled',
+        title: 'Reserva cancelada',
+        message: `${passenger.name} cancelou a reserva na sua carona de ${ride.origin} para ${ride.destination}.`,
+        ride_id: ride.id,
+      });
+    }
+
     res.json({ message: 'Reserva cancelada' });
   } catch (err) {
     res.status(500).json({ error: err.message });

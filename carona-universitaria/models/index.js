@@ -17,6 +17,7 @@ const User = require('./User')(sequelize);
 const Vehicle = require('./Vehicle')(sequelize);
 const Ride = require('./Ride')(sequelize);
 const Reservation = require('./Reservation')(sequelize);
+const Notification = require('./Notification')(sequelize);
 
 // Associações
 User.hasMany(Vehicle, { foreignKey: 'user_id', onDelete: 'CASCADE' });
@@ -34,4 +35,7 @@ Reservation.belongsTo(Ride, { foreignKey: 'ride_id' });
 User.hasMany(Reservation, { as: 'reservations', foreignKey: 'passenger_id', onDelete: 'CASCADE' });
 Reservation.belongsTo(User, { as: 'passenger', foreignKey: 'passenger_id' });
 
-module.exports = { sequelize, User, Vehicle, Ride, Reservation };
+User.hasMany(Notification, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+Notification.belongsTo(User, { foreignKey: 'user_id' });
+
+module.exports = { sequelize, User, Vehicle, Ride, Reservation, Notification };

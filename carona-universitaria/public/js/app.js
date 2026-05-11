@@ -195,5 +195,46 @@ function requireLogin() {
   return true;
 }
 
+// ── Notificações ──────────────────────────────────────────────
+async function loadNotifications() {
+  if (!Auth.isLoggedIn()) return;
+  try {
+    const data = await api('/notifications');
+    const badge = document.getElementById('notifBadge');
+    const list = document.getElementById('notifList');
+    if (badge) badge.textContent = data.unread > 0 ? data.unread : '';
+    if (list) {
+      if (data.notifications.length === 0) {
+        list.innerHTML = '<p class="notif-empty">Nenhuma notificação</p>';
+      } else {
+        list.innerHTML = data.notifications.map(n => `
+          <div class="notif-item${n.read ? '' : ' unread'}" data-id="${n.id}" onclick="markNotifRead(${n.id}, ${n.ride_id})">
+            <div class="notif-title">${n.title}</div>
+            <div class="notif-msg">${n.message}</div>
+            <div class="notif-time">${formatDateTime(n.created_at)}</div>
+          </div>`).join('');
+      }
+    }
+  } catch (_) {}
+}
+
+async function markNotifRead(id, rideId) {
+  try {
+    await api(`/notifications/${id}/read`, { method: 'PUT' });
+    if (rideId) window.location.href = `/ride-detail.html?id=${rideId}`;
+    else loadNotifications();
+  } catch (_) {}
+}
+
+async function markAllNotifRead() {
+  try {
+    await api('/notifications/read-all', { method: 'PUT' });
+    loadNotifications();
+  } catch (_) {}
+}
+
 // Initialize navbar on every page
-document.addEventListener('DOMContentLoaded', setupNavbar);
+document.addEventListener('DOMContentLoaded', () => {
+  setupNavbar();
+  loadNotifications();
+});
