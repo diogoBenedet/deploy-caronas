@@ -1074,42 +1074,103 @@ textarea { resize: vertical; min-height: 90px; }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .search-box {
-    grid-template-columns: 1fr;
-  }
+  /* Navbar */
+  .hamburger { display: flex; }
+  .navbar { position: relative; }
+  .navbar-inner { height: 56px; }
 
   .navbar-links {
     display: none;
     position: absolute;
-    top: 64px;
+    top: 56px;
     left: 0;
     right: 0;
     background: var(--primary-dark);
     flex-direction: column;
-    padding: 0.75rem;
+    padding: 0.5rem;
     gap: 0.25rem;
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    z-index: 110;
   }
-
   .navbar-links.open { display: flex; }
-  .navbar-links a { padding: 0.65rem 1rem; font-size: 0.95rem; }
-  .hamburger { display: flex; }
-  .navbar { position: relative; }
+  .navbar-links li { width: 100%; }
+  .navbar-links a { padding: 0.75rem 1rem; font-size: 0.95rem; display: block; border-radius: var(--radius-sm); }
 
+  /* Hamburger → X when open */
+  .navbar-links.open ~ #hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .navbar-links.open ~ #hamburger span:nth-child(2) { opacity: 0; }
+  .navbar-links.open ~ #hamburger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Touch targets */
+  .btn { min-height: 44px; padding: 0.6rem 1.1rem; }
+  .btn-sm { min-height: 36px; }
+
+  /* Notification panel full-width on mobile */
+  .notif-panel { width: calc(100vw - 2rem); right: -1rem; left: -1rem; }
+
+  /* Hero */
+  .hero { padding: 2.5rem 1rem; }
+  .hero h1 { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+  .hero p { font-size: 0.95rem; }
+
+  /* Search box */
+  .search-box { grid-template-columns: 1fr; padding: 1rem; gap: 0.75rem; }
+
+  /* Rides grid */
+  .rides-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+
+  /* Ride card */
+  .ride-footer { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+
+  /* Forms */
   .form-row { grid-template-columns: 1fr; }
-  .rides-grid { grid-template-columns: 1fr; }
+  .filter-bar { padding: 1rem; }
+  .filter-row { flex-direction: column; }
+  .filter-row .form-group { min-width: 100%; }
 
-  .hero { padding: 3rem 1rem; }
-  .hero h1 { font-size: 1.75rem; }
-  .hero p { font-size: 1rem; }
-
-  .auth-card { padding: 1.75rem 1.25rem; }
-
-  .tabs { overflow-x: auto; }
+  /* Tabs */
+  .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .tab { white-space: nowrap; }
 
-  .filter-bar form { flex-direction: column; }
-  .filter-bar .form-group { min-width: 100%; }
+  /* Stats grid: 2 cols on mobile */
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 
-  .route-display { font-size: 1.1rem; }
+  /* Features: 1 col on mobile */
+  .features-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+  .features { padding: 2.5rem 1rem; }
+
+  /* Auth */
+  .auth-card { padding: 1.5rem 1rem; margin: 1rem; }
+  .auth-wrap { padding: 1rem 0; }
+
+  /* Route display */
+  .route-display { font-size: 1rem; }
+
+  /* Vehicle card */
+  .vehicle-card { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .vehicle-actions { width: 100%; }
+  .vehicle-actions .btn { flex: 1; }
+
+  /* Page header */
+  .page-header { padding: 2rem 1rem; }
+  .page-header h1 { font-size: 1.5rem; }
+
+  /* Cards: reduce padding */
+  .card { padding: 1rem; }
+
+  /* Container padding */
+  .container { padding: 1rem; }
+}
+
+@media (max-width: 480px) {
+  /* Stats: 1 col on very small screens */
+  .stats-grid { grid-template-columns: 1fr; }
+
+  .hero h1 { font-size: 1.4rem; }
+
+  .navbar-brand { font-size: 1.1rem; }
+  .navbar-brand svg { width: 22px; height: 22px; }
+
+  /* Ride card actions: stack */
+  .ride-meta { flex-direction: column; gap: 0.25rem; }
 }
