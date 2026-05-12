@@ -920,6 +920,55 @@ textarea { resize: vertical; min-height: 90px; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ===== SKELETON LOADER ===== */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--border) 25%, #f0f2f5 50%, var(--border) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.skeleton-line { height: 14px; margin-bottom: 0.6rem; }
+.skeleton-line.wide { width: 80%; }
+.skeleton-line.medium { width: 55%; }
+.skeleton-line.short { width: 35%; }
+.skeleton-line.title { height: 20px; width: 70%; margin-bottom: 0.9rem; }
+.skeleton-avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; }
+
+/* ===== BUTTON LOADING STATE ===== */
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.8;
+}
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+.btn-ghost.btn-loading::after { border-color: rgba(0,0,0,0.2); border-top-color: var(--primary); }
+.btn-outline.btn-loading::after { border-color: rgba(21,101,192,0.2); border-top-color: var(--primary); }
+
 /* ===== FEATURES SECTION ===== */
 .features {
   padding: 4rem 1.5rem;

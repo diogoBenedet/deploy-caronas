@@ -186,6 +186,37 @@ function setupNavbar() {
   }
 }
 
+// ── Button loading state ──────────────────────────────────────
+function setButtonLoading(btn, loading, originalText) {
+  if (loading) {
+    btn._originalText = btn.innerHTML;
+    btn.innerHTML = (originalText || btn.textContent) + ' ';
+    btn.classList.add('btn-loading');
+    btn.disabled = true;
+  } else {
+    btn.innerHTML = btn._originalText || originalText || btn.innerHTML;
+    btn.classList.remove('btn-loading');
+    btn.disabled = false;
+  }
+}
+
+// ── Skeleton cards ────────────────────────────────────────────
+function skeletonCards(count = 3) {
+  return Array.from({ length: count }, () => `
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-line title"></div>
+      <div class="skeleton skeleton-line wide"></div>
+      <div class="skeleton skeleton-line medium"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <div class="skeleton skeleton-avatar"></div>
+          <div class="skeleton skeleton-line short" style="margin:0;width:80px;"></div>
+        </div>
+        <div class="skeleton skeleton-line short" style="margin:0;width:60px;height:18px;"></div>
+      </div>
+    </div>`).join('');
+}
+
 // ── Guard: require login ──────────────────────────────────────
 function requireLogin() {
   if (!Auth.isLoggedIn()) {

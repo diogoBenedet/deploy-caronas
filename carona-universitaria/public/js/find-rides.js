@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function loadRides() {
   const container = document.getElementById('ridesContainer');
   const countEl = document.getElementById('resultsCount');
-  container.innerHTML = `<div class="loader" style="grid-column:1/-1;"><div class="spinner"></div></div>`;
+  container.innerHTML = skeletonCards(6);
 
   const origin = document.getElementById('filterOrigin').value.trim();
   const dest = document.getElementById('filterDest').value.trim();
