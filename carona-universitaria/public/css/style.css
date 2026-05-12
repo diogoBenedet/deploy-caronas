@@ -1121,6 +1121,16 @@ textarea { resize: vertical; min-height: 90px; }
 .vehicle-details .meta { font-size: 0.85rem; color: var(--text-muted); }
 .vehicle-actions { display: flex; gap: 0.5rem; }
 
+/* ===== PAGINATION ===== */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.pagination-info { font-size: 0.9rem; color: var(--text-muted); }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   /* Navbar */

@@ -51,14 +51,22 @@ router.get('/', async (req, res) => {
       if (!isNaN(minS) && minS > 0) where.available_seats = { [Op.gte]: minS };
     }
 
-    const rides = await Ride.findAll({
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit, 10) || 12));
+    const offset = (page - 1) * limit;
+
+    const { count, rows: rides } = await Ride.findAndCountAll({
       where,
       include: [
         { model: User, as: 'driver', attributes: ['name', 'phone', 'profile_photo'] },
         { model: Vehicle, attributes: ['model', 'color', 'plate'] },
       ],
       order: [['departure_time', 'ASC']],
+      limit,
+      offset,
     });
+
+    const totalPages = Math.ceil(count / limit);
 
     const result = rides.map(r => {
       const data = r.toJSON();
@@ -75,7 +83,7 @@ router.get('/', async (req, res) => {
       };
     });
 
-    res.json(result);
+    res.json({ rides: result, total: count, page, totalPages, limit });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
