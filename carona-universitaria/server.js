@@ -18,6 +18,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/vehicles', require('./routes/vehicles'));
 app.use('/api/rides', require('./routes/rides'));
+app.use('/api/notifications', require('./routes/notifications'));
 
 // Fallback: servir index.html para rotas do frontend
 app.get('*', (req, res) => {
