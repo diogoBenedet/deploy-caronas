@@ -30,6 +30,7 @@
           <a href="/register.html" class="btn-nav">Cadastrar</a>
         </li>
         <li id="navLoggedIn" style="display:none;">
+          <div class="navbar-user-group">
           <div class="notif-bell" id="notifBell" onclick="toggleNotifPanel()" title="Notificações">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
             <span class="notif-badge" id="notifBadge"></span>
@@ -54,6 +55,10 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
                 Oferecer Carona
               </a>
+              <a href="/my-rides.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+                Minhas Caronas
+              </a>
               <a href="/profile.html">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Meu Perfil
@@ -64,6 +69,7 @@
                 Sair
               </a>
             </div>
+          </div>
           </div>
         </li>
       </ul>
@@ -143,7 +149,7 @@
   </section>
 
   <!-- CTA -->
-  <section style="background: linear-gradient(135deg, var(--secondary), var(--primary)); padding: 4rem 1.5rem; text-align: center; color: white;">
+  <section id="ctaSection" style="background: linear-gradient(135deg, var(--secondary), var(--primary)); padding: 4rem 1.5rem; text-align: center; color: white;">
     <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1rem;">Pronto para começar?</h2>
     <p style="font-size: 1.1rem; opacity: 0.9; margin-bottom: 2rem;">Crie sua conta gratuitamente e comece a usar hoje mesmo.</p>
     <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
@@ -152,9 +158,8 @@
     </div>
   </section>
 
-  <footer class="footer">
-    <p><strong>Carona Universitária</strong> &mdash; Feito com ❤️ para estudantes &bull; 2024</p>
-  </footer>
+
+
 
   <div class="toast-container" id="toastContainer"></div>
 

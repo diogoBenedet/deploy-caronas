@@ -20,6 +20,18 @@
         <li id="navLoggedOut"><a href="/login.html">Entrar</a></li>
         <li id="navLoggedOut2"><a href="/register.html" class="btn-nav">Cadastrar</a></li>
         <li id="navLoggedIn" style="display:none;">
+          <div class="navbar-user-group">
+          <div class="notif-bell" id="notifBell" onclick="toggleNotifPanel()" title="Notificações">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="notif-badge" id="notifBadge"></span>
+            <div class="notif-panel" id="notifPanel">
+              <div class="notif-header">
+                <strong>Notificações</strong>
+                <button onclick="event.stopPropagation();markAllNotifRead()" class="notif-read-all">Marcar todas</button>
+              </div>
+              <div id="notifList"><p class="notif-empty">Carregando…</p></div>
+            </div>
+          </div>
           <div class="navbar-user" id="userMenu">
             <div id="navAvatarWrap"></div>
             <span id="navUserName"></span>
@@ -32,6 +44,7 @@
               <hr/>
               <a href="#" class="danger" id="logoutBtn">Sair</a>
             </div>
+          </div>
           </div>
         </li>
       </ul>
@@ -62,5 +75,14 @@
   <div class="toast-container" id="toastContainer"></div>
   <script src="/js/app.js"></script>
   <script src="/js/ride-detail.js"></script>
+  <script>
+    function toggleNotifPanel() {
+      document.getElementById('notifPanel').classList.toggle('open');
+      document.getElementById('dropdownMenu')?.classList.remove('open');
+    }
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#notifBell')) document.getElementById('notifPanel')?.classList.remove('open');
+    });
+  </script>
 </body>
 </html>

@@ -2,6 +2,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Set min date for search
   document.getElementById('searchDate').min = new Date().toISOString().split('T')[0];
 
+  // Hide CTA for logged-in users
+  if (Auth.isLoggedIn()) {
+    const cta = document.getElementById('ctaSection');
+    if (cta) cta.style.display = 'none';
+  }
+
   await loadRides();
 
   document.getElementById('searchBtn').addEventListener('click', () => {

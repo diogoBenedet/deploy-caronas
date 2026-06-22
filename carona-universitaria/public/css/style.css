@@ -154,6 +154,13 @@ img { max-width: 100%; display: block; }
 .dropdown-menu a.danger { color: var(--danger); }
 .dropdown-menu hr { border: none; border-top: 1px solid var(--border); margin: 0; }
 
+/* ===== NAVBAR USER GROUP (bell + profile) ===== */
+.navbar-user-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 /* ===== NOTIFICAÇÕES ===== */
 .notif-bell {
   position: relative;
@@ -1154,6 +1161,7 @@ textarea { resize: vertical; min-height: 90px; }
   .navbar-links.open { display: flex; }
   .navbar-links li { width: 100%; }
   .navbar-links a { padding: 0.75rem 1rem; font-size: 0.95rem; display: block; border-radius: var(--radius-sm); }
+  .navbar-user-group { width: 100%; justify-content: flex-end; padding: 0.5rem 0.5rem 0.25rem; }
 
   /* Hamburger → X when open */
   .navbar-links.open ~ #hamburger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
