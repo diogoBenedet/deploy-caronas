@@ -15,11 +15,14 @@
       </a>
       <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
       <ul class="navbar-links" id="navLinks">
-        <li><a href="/">Início</a></li>
+        <li class="nav-loggedout"><a href="/">Início</a></li>
+        <li class="nav-loggedin" style="display:none;"><a href="/dashboard.html">Dashboard</a></li>
         <li><a href="/find-rides.html" class="active">Buscar Caronas</a></li>
-        <li id="navLoggedOut"><a href="/login.html">Entrar</a></li>
-        <li id="navLoggedOut2"><a href="/register.html" class="btn-nav">Cadastrar</a></li>
-        <li id="navLoggedIn" style="display:none;">
+        <li class="nav-loggedin" style="display:none;"><a href="/offer-ride.html">Oferecer Carona</a></li>
+        <li class="nav-loggedin" style="display:none;"><a href="/my-rides.html">Minhas Caronas</a></li>
+        <li class="nav-loggedout"><a href="/login.html">Entrar</a></li>
+        <li class="nav-loggedout"><a href="/register.html" class="btn-nav">Cadastrar</a></li>
+        <li id="navLoggedIn" class="nav-loggedin" style="display:none;">
           <div class="navbar-user-group">
           <div class="notif-bell" id="notifBell" onclick="toggleNotifPanel()" title="Notificações">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
@@ -37,9 +40,6 @@
             <span id="navUserName"></span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
             <div class="dropdown-menu" id="dropdownMenu">
-              <a href="/dashboard.html">Dashboard</a>
-              <a href="/offer-ride.html">Oferecer Carona</a>
-              <a href="/my-rides.html">Minhas Caronas</a>
               <a href="/profile.html">Meu Perfil</a>
               <hr/>
               <a href="#" class="danger" id="logoutBtn">Sair</a>
@@ -62,7 +62,7 @@
     <!-- FILTROS -->
     <div class="filter-bar">
       <form id="filterForm">
-        <div class="filter-row">
+        <div class="filter-main-row">
           <div class="form-group">
             <label>Origem</label>
             <input type="text" id="filterOrigin" placeholder="De onde?" />
@@ -71,14 +71,28 @@
             <label>Destino</label>
             <input type="text" id="filterDest" placeholder="Para onde?" />
           </div>
-          <div class="form-group">
+          <div class="form-group filter-date-group">
             <label>Data</label>
             <input type="date" id="filterDate" />
           </div>
+          <div class="filter-actions">
+            <label>&nbsp;</label>
+            <div style="display:flex;gap:0.5rem;">
+              <button type="submit" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Filtrar
+              </button>
+              <button type="button" class="btn btn-ghost" id="clearFilters">Limpar</button>
+            </div>
+          </div>
         </div>
+
         <details class="filter-advanced">
-          <summary>Filtros avançados</summary>
-          <div class="filter-row filter-advanced-row">
+          <summary>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            Filtros avançados
+          </summary>
+          <div class="filter-advanced-row">
             <div class="form-group">
               <label>Horário a partir de</label>
               <input type="time" id="filterTimeFrom" />
@@ -89,7 +103,7 @@
             </div>
             <div class="form-group">
               <label>Preço máximo (R$)</label>
-              <input type="number" id="filterMaxPrice" placeholder="Ex: 15" min="0" step="0.50" />
+              <input type="number" id="filterMaxPrice" placeholder="Ex: 15,00" min="0" step="0.50" />
             </div>
             <div class="form-group">
               <label>Vagas mínimas</label>
@@ -97,13 +111,6 @@
             </div>
           </div>
         </details>
-        <div style="display:flex;gap:0.5rem;align-items:flex-end;flex-wrap:wrap;">
-          <button type="submit" class="btn btn-primary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            Filtrar
-          </button>
-          <button type="button" class="btn btn-ghost" id="clearFilters">Limpar</button>
-        </div>
       </form>
     </div>
 

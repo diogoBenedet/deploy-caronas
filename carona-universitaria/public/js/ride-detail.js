@@ -54,7 +54,7 @@ function renderRide(ride) {
     actionBtn = `<button class="btn btn-lg" disabled style="background:var(--border);color:var(--text-muted);">Sem vagas disponíveis</button>`;
   } else if (alreadyReserved) {
     actionBtn = `
-      <span class="badge badge-success" style="font-size:1rem;padding:0.5rem 1rem;">Vaga reservada ✓</span>
+      <span class="badge badge-success" style="font-size:1rem;padding:0.5rem 1rem;display:inline-flex;align-items:center;gap:0.4rem;">Vaga reservada <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg></span>
       <button class="btn btn-ghost btn-sm" onclick="cancelReservation(${ride.id})" style="color:var(--danger);">Cancelar minha reserva</button>`;
   } else {
     actionBtn = `<button class="btn btn-secondary btn-lg" onclick="openReserveModal()">Reservar vaga — ${formatPrice(ride.price)}</button>`;
@@ -129,7 +129,7 @@ function renderRide(ride) {
               ${makeAvatar(ride.driver_name, ride.driver_photo, 56)}
               <div>
                 <div style="font-weight:700;font-size:1.1rem;">${ride.driver_name}</div>
-                <div style="color:var(--text-muted);font-size:0.875rem;margin-top:0.2rem;">📞 ${ride.driver_phone}</div>
+                <div style="color:var(--text-muted);font-size:0.875rem;margin-top:0.2rem;display:flex;align-items:center;gap:0.35rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>${ride.driver_phone}</div>
               </div>
               <div style="margin-left:auto;display:flex;gap:0.5rem;flex-wrap:wrap;">
                 <a href="tel:${ride.driver_phone}" class="btn btn-outline btn-sm">

@@ -235,6 +235,32 @@ router.post('/', authMiddleware, async (req, res) => {
   }
 });
 
+// Finalizar carona (motorista)
+router.put('/:id/complete', authMiddleware, async (req, res) => {
+  try {
+    const ride = await Ride.findOne({ where: { id: req.params.id, driver_id: req.userId } });
+    if (!ride) return res.status(404).json({ error: 'Carona não encontrada' });
+    if (ride.status !== 'active') return res.status(400).json({ error: 'Carona não está ativa' });
+
+    await ride.update({ status: 'completed' });
+
+    const reservations = await Reservation.findAll({ where: { ride_id: ride.id, status: 'confirmed' } });
+    await Promise.all(reservations.map(r =>
+      Notification.create({
+        user_id: r.passenger_id,
+        type: 'ride_completed',
+        title: 'Carona finalizada',
+        message: `A carona de ${ride.origin} para ${ride.destination} foi finalizada. Obrigado por usar o Carona Uni!`,
+        ride_id: ride.id,
+      })
+    ));
+
+    res.json({ message: 'Carona finalizada' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Cancelar carona (motorista)
 router.delete('/:id', authMiddleware, async (req, res) => {
   try {

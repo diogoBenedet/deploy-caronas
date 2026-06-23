@@ -1,15 +1,33 @@
 document.addEventListener('DOMContentLoaded', async () => {
   if (!requireLogin()) return;
 
-  // Set min date to today
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('rideDate').min = today;
   document.getElementById('rideDate').value = today;
 
+  setupPriceMask();
   await loadVehicles();
 
   document.getElementById('offerRideForm').addEventListener('submit', handleSubmit);
 });
+
+function setupPriceMask() {
+  const input = document.getElementById('ridePrice');
+  input.addEventListener('input', () => {
+    const digits = input.value.replace(/\D/g, '').slice(0, 6); // max 999999 centavos = R$ 9.999,99
+    if (!digits) { input.value = ''; return; }
+    const cents = parseInt(digits, 10);
+    const reais = Math.floor(cents / 100);
+    const centavos = cents % 100;
+    input.value = `R$ ${reais.toLocaleString('pt-BR')},${String(centavos).padStart(2, '0')}`;
+  });
+}
+
+function parsePriceValue() {
+  const raw = document.getElementById('ridePrice').value;
+  if (!raw) return null;
+  return parseFloat(raw.replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
+}
 
 async function loadVehicles() {
   const select = document.getElementById('vehicleSelect');
@@ -23,6 +41,7 @@ async function loadVehicles() {
       document.getElementById('submitRideBtn').disabled = true;
       return;
     }
+    if (alertDiv) { alertDiv.style.display = 'none'; }
     select.innerHTML = vehicles.map(v =>
       `<option value="${v.id}" data-seats="${v.seats}">${v.plate} — ${v.model} ${v.color}</option>`
     ).join('');
@@ -54,11 +73,11 @@ async function handleSubmit(e) {
   const destination = document.getElementById('rideDestination').value.trim();
   const date = document.getElementById('rideDate').value;
   const time = document.getElementById('rideTime').value;
-  const price = document.getElementById('ridePrice').value;
+  const price = parsePriceValue();
   const seats = document.getElementById('rideSeats').value;
   const notes = document.getElementById('rideNotes').value.trim();
 
-  if (!vehicleId || !origin || !destination || !date || !time || price === '' || !seats) {
+  if (!vehicleId || !origin || !destination || !date || !time || price === null || !seats) {
     showToast('Preencha todos os campos obrigatórios.', 'error');
     return;
   }

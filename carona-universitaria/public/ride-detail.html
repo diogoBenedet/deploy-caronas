@@ -15,11 +15,14 @@
       </a>
       <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
       <ul class="navbar-links" id="navLinks">
-        <li><a href="/">Início</a></li>
+        <li class="nav-loggedout"><a href="/">Início</a></li>
+        <li class="nav-loggedin" style="display:none;"><a href="/dashboard.html">Dashboard</a></li>
         <li><a href="/find-rides.html">Buscar Caronas</a></li>
-        <li id="navLoggedOut"><a href="/login.html">Entrar</a></li>
-        <li id="navLoggedOut2"><a href="/register.html" class="btn-nav">Cadastrar</a></li>
-        <li id="navLoggedIn" style="display:none;">
+        <li class="nav-loggedin" style="display:none;"><a href="/offer-ride.html">Oferecer Carona</a></li>
+        <li class="nav-loggedin" style="display:none;"><a href="/my-rides.html">Minhas Caronas</a></li>
+        <li class="nav-loggedout"><a href="/login.html">Entrar</a></li>
+        <li class="nav-loggedout"><a href="/register.html" class="btn-nav">Cadastrar</a></li>
+        <li id="navLoggedIn" class="nav-loggedin" style="display:none;">
           <div class="navbar-user-group">
           <div class="notif-bell" id="notifBell" onclick="toggleNotifPanel()" title="Notificações">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
@@ -37,9 +40,6 @@
             <span id="navUserName"></span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
             <div class="dropdown-menu" id="dropdownMenu">
-              <a href="/dashboard.html">Dashboard</a>
-              <a href="/offer-ride.html">Oferecer Carona</a>
-              <a href="/my-rides.html">Minhas Caronas</a>
               <a href="/profile.html">Meu Perfil</a>
               <hr/>
               <a href="#" class="danger" id="logoutBtn">Sair</a>

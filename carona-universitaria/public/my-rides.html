@@ -15,7 +15,7 @@
       </a>
       <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
       <ul class="navbar-links" id="navLinks">
-        <li><a href="/">Início</a></li>
+        <li><a href="/dashboard.html">Dashboard</a></li>
         <li><a href="/find-rides.html">Buscar Caronas</a></li>
         <li><a href="/offer-ride.html">Oferecer Carona</a></li>
         <li><a href="/my-rides.html" class="active">Minhas Caronas</a></li>
@@ -37,7 +37,6 @@
             <span id="navUserName"></span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
             <div class="dropdown-menu" id="dropdownMenu">
-              <a href="/dashboard.html">Dashboard</a>
               <a href="/profile.html">Meu Perfil</a>
               <hr/>
               <a href="#" class="danger" id="logoutBtn">Sair</a>
@@ -84,6 +83,23 @@
       <h3 style="font-size:1rem;font-weight:600;color:var(--text-muted);margin-bottom:1rem;">Suas reservas de carona</h3>
       <div id="passengerRidesList" style="display:flex;flex-direction:column;gap:1rem;">
         <div class="loader"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FINALIZAR CARONA -->
+  <div class="modal-overlay hidden" id="finalizeModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Finalizar carona</h2>
+        <button class="modal-close" id="closeFinalizeModal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p style="color:var(--text-muted);margin-bottom:1.25rem;">Confirmar que a carona foi realizada com sucesso? Os passageiros serão notificados.</p>
+      <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+        <button class="btn btn-ghost" id="finalizeModalNo">Voltar</button>
+        <button class="btn btn-primary" id="finalizeModalYes">Sim, finalizar</button>
       </div>
     </div>
   </div>

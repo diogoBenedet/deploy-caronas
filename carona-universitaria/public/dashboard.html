@@ -15,7 +15,7 @@
       </a>
       <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
       <ul class="navbar-links" id="navLinks">
-        <li><a href="/">Início</a></li>
+        <li><a href="/dashboard.html" class="active">Dashboard</a></li>
         <li><a href="/find-rides.html">Buscar Caronas</a></li>
         <li><a href="/offer-ride.html">Oferecer Carona</a></li>
         <li><a href="/my-rides.html">Minhas Caronas</a></li>
@@ -37,7 +37,6 @@
             <span id="navUserName"></span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
             <div class="dropdown-menu" id="dropdownMenu">
-              <a href="/dashboard.html">Dashboard</a>
               <a href="/profile.html">Meu Perfil</a>
               <hr/>
               <a href="#" class="danger" id="logoutBtn">Sair</a>
@@ -59,22 +58,22 @@
   <div class="container">
     <div class="stats-grid" id="statsGrid">
       <div class="stat-card">
-        <div class="stat-icon">🚗</div>
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="21" r="1"/><circle cx="20" cy="21" r="1"/></svg></div>
         <div class="stat-label">Caronas oferecidas</div>
         <div class="stat-value" id="statOffered">—</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">🎒</div>
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
         <div class="stat-label">Caronas utilizadas</div>
         <div class="stat-value" id="statUsed">—</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">🚘</div>
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
         <div class="stat-label">Veículos cadastrados</div>
         <div class="stat-value" id="statVehicles">—</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">⭐</div>
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
         <div class="stat-label">Disponíveis agora</div>
         <div class="stat-value" id="statAvailable">—</div>
       </div>

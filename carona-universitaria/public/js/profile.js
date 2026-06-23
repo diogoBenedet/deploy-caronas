@@ -120,7 +120,7 @@ async function loadVehicles() {
     list.innerHTML = vehicles.map(v => `
       <div class="vehicle-card">
         <div class="vehicle-info">
-          <div class="vehicle-icon">🚗</div>
+          <div class="vehicle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="26" height="26"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="21" r="1"/><circle cx="20" cy="21" r="1"/></svg></div>
           <div class="vehicle-details">
             <div class="plate">${v.plate}</div>
             <div class="meta">${v.model} · ${v.color} · ${v.seats} vaga${v.seats !== 1 ? 's' : ''}</div>

@@ -15,7 +15,7 @@
       </a>
       <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
       <ul class="navbar-links" id="navLinks">
-        <li><a href="/">Início</a></li>
+        <li><a href="/dashboard.html">Dashboard</a></li>
         <li><a href="/find-rides.html">Buscar Caronas</a></li>
         <li><a href="/offer-ride.html" class="active">Oferecer Carona</a></li>
         <li><a href="/my-rides.html">Minhas Caronas</a></li>
@@ -37,7 +37,6 @@
             <span id="navUserName"></span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
             <div class="dropdown-menu" id="dropdownMenu">
-              <a href="/dashboard.html">Dashboard</a>
               <a href="/profile.html">Meu Perfil</a>
               <hr/>
               <a href="#" class="danger" id="logoutBtn">Sair</a>
@@ -60,7 +59,7 @@
     <div style="max-width:680px;margin:0 auto;">
 
       <!-- AVISO: SEM VEÍCULO -->
-      <div id="noVehicleAlert" style="display:none;background:#FFF3E0;border:1px solid #FFB300;border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:0.75rem;">
+      <div id="noVehicleAlert" style="display:none;background:#FFF3E0;border:1px solid #FFB300;border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem;align-items:flex-start;gap:0.75rem;">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6F00" stroke-width="2" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <div>
           <p style="font-weight:600;color:#E65100;">Você não tem veículo cadastrado</p>
@@ -122,7 +121,7 @@
           <div class="form-row">
             <div class="form-group">
               <label for="ridePrice">Valor por pessoa (R$) *</label>
-              <input type="number" id="ridePrice" placeholder="0,00" min="0" step="0.50" required />
+              <input type="text" id="ridePrice" placeholder="R$ 0,00" inputmode="numeric" autocomplete="off" required />
             </div>
             <div class="form-group">
               <label for="rideSeats">Vagas disponíveis *</label>

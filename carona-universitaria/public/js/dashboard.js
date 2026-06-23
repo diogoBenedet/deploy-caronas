@@ -20,7 +20,7 @@ async function loadStats() {
     document.getElementById('statOffered').textContent = driverRides.length;
     document.getElementById('statUsed').textContent = passengerRides.length;
     document.getElementById('statVehicles').textContent = vehicles.length;
-    document.getElementById('statAvailable').textContent = available.length;
+    document.getElementById('statAvailable').textContent = available.total ?? 0;
   } catch (e) {
     console.error('Erro ao carregar estatísticas:', e);
   }

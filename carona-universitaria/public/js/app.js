@@ -45,8 +45,13 @@ function showToast(msg, type = 'default', duration = 3500) {
   if (!container) return;
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  const icons = { success: '✓', error: '✕', warning: '⚠' };
-  toast.innerHTML = `<span>${icons[type] || 'ℹ'}</span><span>${msg}</span>`;
+  const icons = {
+    success: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg>`,
+    error:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`,
+    warning: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+  };
+  const defaultIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+  toast.innerHTML = `<span style="display:flex;align-items:center;flex-shrink:0;">${icons[type] || defaultIcon}</span><span>${msg}</span>`;
   container.appendChild(toast);
   setTimeout(() => {
     toast.style.animation = 'toastOut 0.3s ease forwards';
@@ -97,6 +102,7 @@ function initials(name) {
 function statusBadge(status) {
   const map = {
     active: ['badge-success', 'Ativa'],
+    completed: ['badge-muted', 'Finalizada'],
     cancelled: ['badge-danger', 'Cancelada'],
     confirmed: ['badge-success', 'Confirmada'],
     pending: ['badge-warning', 'Pendente']
@@ -171,12 +177,23 @@ function setupNavbar() {
 
   const user = Auth.getUser();
   if (user) {
+    const path = window.location.pathname;
+    if (path === '/' || path === '/index.html') {
+      window.location.replace('/dashboard.html');
+      return;
+    }
+
+    // ID-based (backward compat)
     const navLoggedOut = document.getElementById('navLoggedOut');
     const navLoggedOut2 = document.getElementById('navLoggedOut2');
     const navLoggedIn = document.getElementById('navLoggedIn');
     if (navLoggedOut) navLoggedOut.style.display = 'none';
     if (navLoggedOut2) navLoggedOut2.style.display = 'none';
     if (navLoggedIn) navLoggedIn.style.display = '';
+
+    // Class-based
+    document.querySelectorAll('.nav-loggedout').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.nav-loggedin').forEach(el => el.style.display = '');
 
     const navUserName = document.getElementById('navUserName');
     if (navUserName) navUserName.textContent = user.name.split(' ')[0];
