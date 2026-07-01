@@ -82,12 +82,17 @@ async function handleSubmit(e) {
     return;
   }
 
-  const departure_time = `${date}T${time}:00`;
+  // Converte a data/hora local do usuário para um instante absoluto (ISO/UTC).
+  // Sem isso, um servidor em UTC (ex: Railway) interpreta "20:55" como 20:55 UTC
+  // e rejeita caronas nas próximas horas achando que estão no passado.
+  const departureDate = new Date(`${date}T${time}:00`);
 
-  if (new Date(departure_time) <= new Date()) {
+  if (isNaN(departureDate.getTime()) || departureDate <= new Date()) {
     showToast('O horário de saída deve ser no futuro.', 'error');
     return;
   }
+
+  const departure_time = departureDate.toISOString();
 
   setButtonLoading(btn, true, 'Publicando…');
 
