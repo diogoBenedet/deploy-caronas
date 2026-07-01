@@ -2,8 +2,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!requireLogin()) return;
 
   const user = Auth.getUser();
+  const greetName = document.getElementById('greetName');
+  if (greetName) greetName.textContent = user.name.split(' ')[0];
+  const greetAvatar = document.getElementById('greetAvatar');
+  if (greetAvatar) {
+    greetAvatar.innerHTML = user.profile_photo
+      ? `<img src="${user.profile_photo}" alt="${user.name}" />`
+      : initials(user.name);
+  }
   const welcomeMsg = document.getElementById('welcomeMsg');
-  if (welcomeMsg) welcomeMsg.textContent = `Olá, ${user.name.split(' ')[0]}! Confira suas informações abaixo.`;
+  if (welcomeMsg) welcomeMsg.textContent = 'Pronto pra mais uma carona?';
 
   await Promise.all([loadStats(), loadUpcomingRides()]);
 });

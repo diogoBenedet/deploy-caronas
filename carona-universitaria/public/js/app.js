@@ -111,42 +111,38 @@ function statusBadge(status) {
   return `<span class="badge ${cls}">${label}</span>`;
 }
 
-// ── Ride card HTML ────────────────────────────────────────────
+// ── Ride card HTML (route-track design) ───────────────────────
 function rideCardHTML(ride, clickable = true) {
   const seatsClass = ride.available_seats <= 1 ? 'seats-badge low' : 'seats-badge';
   const price = formatPrice(ride.price);
-  const dt = formatDateTime(ride.departure_time);
+  const time = formatTime(ride.departure_time);
+  const date = formatDate(ride.departure_time);
+  const carSub = [ride.vehicle_model, ride.vehicle_color].filter(Boolean).join(' · ');
+
+  const avatar = ride.driver_photo
+    ? `<img src="${ride.driver_photo}" alt="${ride.driver_name}" class="ride-av" style="object-fit:cover;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" /><div class="ride-av" style="display:none;">${initials(ride.driver_name)}</div>`
+    : `<div class="ride-av">${initials(ride.driver_name)}</div>`;
 
   const card = `
     <div class="ride-card" onclick="${clickable ? `window.location='/ride-detail.html?id=${ride.id}'` : ''}">
-      <div class="ride-route">
-        <span class="from">${ride.origin}</span>
-        <span class="arrow">→</span>
-        <span class="to">${ride.destination}</span>
+      <div class="ride-card-top">
+        ${avatar}
+        <div class="ride-driver">
+          <div class="nm">${ride.driver_name || 'Motorista'}</div>
+          ${carSub ? `<div class="sub">${carSub}</div>` : ''}
+        </div>
+        <div class="ride-price-lg">${price}</div>
       </div>
-      <div class="ride-meta">
-        <div class="ride-meta-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          ${dt}
-        </div>
-        <div class="ride-meta-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="21" r="1"/><circle cx="20" cy="21" r="1"/></svg>
-          ${ride.vehicle_model || ''} ${ride.vehicle_color ? '· ' + ride.vehicle_color : ''}
-        </div>
+      <div class="ride-track">
+        <div class="rail"><span class="d1"></span><span class="line"></span><span class="d2"></span></div>
+        <div class="pts"><div class="pt">${ride.origin}</div><div class="pt" style="color:var(--secondary);">${ride.destination}</div></div>
       </div>
-      ${ride.notes ? `<p style="font-size:0.85rem;color:var(--text-muted);font-style:italic;">"${ride.notes}"</p>` : ''}
-      <div class="ride-footer">
-        <div class="driver-info">
-          ${makeAvatar(ride.driver_name, ride.driver_photo, 28)}
-          <span>${ride.driver_name}</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:0.75rem;">
-          <div class="${seatsClass}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-            ${ride.available_seats} vaga${ride.available_seats !== 1 ? 's' : ''}
-          </div>
-          <span class="ride-price">${price}</span>
-        </div>
+      ${ride.notes ? `<p class="ride-note">"${ride.notes}"</p>` : ''}
+      <div class="ride-divider"></div>
+      <div class="ride-chips">
+        <span class="chip chip-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" width="13" height="13"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${time}</span>
+        <span class="${seatsClass}">${ride.available_seats} vaga${ride.available_seats !== 1 ? 's' : ''}</span>
+        <span class="chip-date">${date}</span>
       </div>
     </div>`;
   return card;

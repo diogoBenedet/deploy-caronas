@@ -48,14 +48,15 @@
     </div>
   </nav>
 
-  <div class="page-header">
-    <div class="page-header-inner">
-      <h1>Dashboard</h1>
-      <p id="welcomeMsg">Bem-vindo de volta!</p>
-    </div>
-  </div>
-
   <div class="container">
+    <div class="dash-greet scr-in">
+      <div class="av" id="greetAvatar">AP</div>
+      <div>
+        <h1>Oi, <span id="greetName">estudante</span>! 👋</h1>
+        <p id="welcomeMsg">Pronto pra mais uma carona?</p>
+      </div>
+    </div>
+
     <div class="stats-grid" id="statsGrid">
       <div class="stat-card">
         <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28"><path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><circle cx="12" cy="21" r="1"/><circle cx="20" cy="21" r="1"/></svg></div>
@@ -82,23 +83,23 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px,1fr));gap:1.5rem;">
       <!-- Ações rápidas -->
       <div class="card">
-        <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1.25rem;">Ações Rápidas</h3>
+        <h3 style="font-family:var(--font-display);font-size:1.25rem;font-weight:700;margin-bottom:1.25rem;">Ações rápidas</h3>
         <div style="display:flex;flex-direction:column;gap:0.75rem;">
-          <a href="/offer-ride.html" class="btn btn-primary">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-            Oferecer nova carona
+          <a href="/offer-ride.html" class="quick-action primary">
+            <div class="qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" width="20" height="20"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+            <div><div class="qa-title">Oferecer nova carona</div><div class="qa-sub">Publique sua rota</div></div>
           </a>
-          <a href="/find-rides.html" class="btn btn-outline">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            Buscar carona disponível
+          <a href="/find-rides.html" class="quick-action">
+            <div class="qa-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" width="20" height="20"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <div><div class="qa-title">Buscar carona</div><div class="qa-sub">Encontre uma rota</div></div>
           </a>
-          <a href="/profile.html" class="btn btn-ghost">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Editar perfil e veículo
+          <a href="/profile.html" class="quick-action">
+            <div class="qa-ic" style="background:#E6F8F1;color:#12B981;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="20" height="20"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div><div class="qa-title">Editar perfil</div><div class="qa-sub">Perfil e veículo</div></div>
           </a>
-          <a href="/my-rides.html" class="btn btn-ghost">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
-            Minhas caronas
+          <a href="/my-rides.html" class="quick-action">
+            <div class="qa-ic" style="background:#FFF4E0;color:#FF9F1C;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" width="20" height="20"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div>
+            <div><div class="qa-title">Minhas caronas</div><div class="qa-sub">Histórico e reservas</div></div>
           </a>
         </div>
       </div>
@@ -106,8 +107,8 @@
       <!-- Próximas caronas -->
       <div class="card">
         <div class="flex justify-between items-center mb-2">
-          <h3 style="font-size:1.1rem;font-weight:700;">Próximas caronas</h3>
-          <a href="/my-rides.html" class="text-sm text-primary">Ver todas</a>
+          <h3 style="font-family:var(--font-display);font-size:1.25rem;font-weight:700;">Próximas caronas</h3>
+          <a href="/my-rides.html" class="text-sm text-primary" style="font-weight:700;">Ver todas</a>
         </div>
         <div id="upcomingRides">
           <div class="loader"><div class="spinner"></div></div>
