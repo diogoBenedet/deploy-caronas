@@ -190,7 +190,12 @@ router.get('/:id', async (req, res) => {
       vehicle_seats: data.Vehicle.seats,
       driver: undefined,
       Vehicle: undefined,
-      passengers: passengers.map(p => p.passenger),
+      passengers: passengers.map(p => ({
+        id: p.passenger.id,
+        name: p.passenger.name,
+        profile_photo: p.passenger.profile_photo,
+        presence_confirmed: p.presence_confirmed,
+      })),
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -318,32 +323,36 @@ router.post('/:id/reserve', authMiddleware, async (req, res) => {
   }
 });
 
-// Confirmar presença (passageiro confirma que vai estar na carona)
-router.put('/:id/confirm-presence', authMiddleware, async (req, res) => {
+// Confirmar/desfazer presença de um passageiro (o MOTORISTA confirma o embarque)
+router.put('/:id/passengers/:passengerId/confirm-presence', authMiddleware, async (req, res) => {
   try {
+    const ride = await Ride.findOne({ where: { id: req.params.id, driver_id: req.userId } });
+    if (!ride) return res.status(404).json({ error: 'Carona não encontrada' });
+    if (ride.status !== 'active') return res.status(400).json({ error: 'Carona não está ativa' });
+
     const reservation = await Reservation.findOne({
-      where: { ride_id: req.params.id, passenger_id: req.userId, status: 'confirmed' },
+      where: { ride_id: req.params.id, passenger_id: req.params.passengerId, status: 'confirmed' },
     });
     if (!reservation) return res.status(404).json({ error: 'Reserva não encontrada' });
 
-    const ride = await Ride.findByPk(req.params.id);
-    if (!ride) return res.status(404).json({ error: 'Carona não encontrada' });
-
-    if (ride.status !== 'active') return res.status(400).json({ error: 'Carona não está ativa' });
-
-    await reservation.update({ presence_confirmed: true, presence_confirmed_at: new Date() });
-
-    // Notifica o motorista
-    const passenger = await User.findByPk(req.userId, { attributes: ['name'] });
-    await Notification.create({
-      user_id: ride.driver_id,
-      type: 'presence_confirmed',
-      title: 'Presença confirmada',
-      message: `${passenger.name} confirmou presença na sua carona de ${ride.origin} para ${ride.destination}.`,
-      ride_id: ride.id,
+    const confirm = req.body.confirmed !== false; // default: confirmar
+    await reservation.update({
+      presence_confirmed: confirm,
+      presence_confirmed_at: confirm ? new Date() : null,
     });
 
-    res.json({ message: 'Presença confirmada com sucesso!' });
+    // Notifica o passageiro
+    if (confirm) {
+      await Notification.create({
+        user_id: reservation.passenger_id,
+        type: 'presence_confirmed',
+        title: 'Presença confirmada',
+        message: `O motorista confirmou sua presença na carona de ${ride.origin} para ${ride.destination}.`,
+        ride_id: ride.id,
+      });
+    }
+
+    res.json({ message: confirm ? 'Presença do passageiro confirmada!' : 'Confirmação removida.' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

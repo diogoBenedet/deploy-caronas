@@ -62,12 +62,23 @@ function renderRide(ride) {
 
   const waLink = `https://wa.me/55${ride.driver_phone.replace(/\D/g,'')}?text=${encodeURIComponent(`Olá ${ride.driver_name}! Vi sua carona (${ride.origin} → ${ride.destination}) no Carona Uni e tenho interesse.`)}`;
 
+  const canManagePresence = isDriver && ride.status === 'active';
   const passengersHTML = ride.passengers && ride.passengers.length > 0
-    ? `<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;">
+    ? `<div style="display:flex;flex-direction:column;gap:0.75rem;margin-top:0.5rem;">
         ${ride.passengers.map(p => `
-          <div title="${p.name}" style="display:flex;align-items:center;gap:0.4rem;font-size:0.85rem;color:var(--text-muted);">
-            ${makeAvatar(p.name, p.profile_photo, 28)}
-            <span>${p.name.split(' ')[0]}</span>
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            ${makeAvatar(p.name, p.profile_photo, 36)}
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:600;font-size:0.9rem;">${p.name}</div>
+              ${p.presence_confirmed
+                ? '<span class="badge badge-success" style="display:inline-flex;align-items:center;gap:0.3rem;margin-top:0.2rem;">Presença confirmada <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg></span>'
+                : '<span class="badge badge-warning" style="margin-top:0.2rem;">Presença pendente</span>'}
+            </div>
+            ${canManagePresence
+              ? (p.presence_confirmed
+                  ? `<button class="btn btn-ghost btn-sm" onclick="setPassengerPresence(${ride.id}, ${p.id}, false)">Desfazer</button>`
+                  : `<button class="btn btn-primary btn-sm" onclick="setPassengerPresence(${ride.id}, ${p.id}, true)">Confirmar presença</button>`)
+              : ''}
           </div>`).join('')}
        </div>`
     : `<p style="color:var(--text-muted);font-size:0.9rem;">Nenhum passageiro ainda.</p>`;
@@ -75,8 +86,8 @@ function renderRide(ride) {
   document.getElementById('rideContent').innerHTML = `
     <div class="ride-detail-hero">
       <div style="max-width:1200px;margin:0 auto;">
-        <a href="/find-rides.html" style="color:rgba(255,255,255,0.7);font-size:0.875rem;display:inline-flex;align-items:center;gap:0.3rem;margin-bottom:1rem;text-decoration:none;">
-          ← Voltar às caronas
+        <a onclick="goBack('/find-rides.html')" style="color:rgba(255,255,255,0.85);font-size:0.875rem;display:inline-flex;align-items:center;gap:0.3rem;margin-bottom:1rem;text-decoration:none;cursor:pointer;">
+          ← Voltar
         </a>
         <div class="route-display">
           <span>${ride.origin}</span>
@@ -195,6 +206,19 @@ async function doReserve(id) {
     showToast(err.message || 'Erro ao reservar vaga.', 'error');
     btn.disabled = false;
     btn.textContent = 'Confirmar reserva';
+  }
+}
+
+async function setPassengerPresence(rideId, passengerId, confirmed) {
+  try {
+    await api(`/rides/${rideId}/passengers/${passengerId}/confirm-presence`, {
+      method: 'PUT',
+      body: JSON.stringify({ confirmed })
+    });
+    showToast(confirmed ? 'Presença do passageiro confirmada!' : 'Confirmação removida.', 'success');
+    await loadRide(rideId);
+  } catch (err) {
+    showToast(err.message || 'Erro ao atualizar presença.', 'error');
   }
 }
 

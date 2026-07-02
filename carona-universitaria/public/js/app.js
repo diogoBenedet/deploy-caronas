@@ -230,6 +230,15 @@ function skeletonCards(count = 3) {
     </div>`).join('');
 }
 
+// ── Voltar ────────────────────────────────────────────────────
+function goBack(fallback) {
+  if (window.history.length > 1 && document.referrer && new URL(document.referrer).origin === window.location.origin) {
+    window.history.back();
+  } else {
+    window.location.href = fallback || (Auth.isLoggedIn() ? '/dashboard.html' : '/');
+  }
+}
+
 // ── Guard: require login ──────────────────────────────────────
 function requireLogin() {
   if (!Auth.isLoggedIn()) {
